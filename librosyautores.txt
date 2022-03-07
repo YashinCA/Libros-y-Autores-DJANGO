@@ -1,0 +1,106 @@
+1. Consulta: crea 5 libros con los siguientes nombres: C Sharp, Java, Python, PHP, Ruby
+c_sharp = Book.objects.create(title="C Sharp")
+java = Book.objects.create(title="Java")
+python = Book.objects.create(title="Python")
+php = Book.objects.create(title="PHP")
+ruby = Book.objects.create(title="Ruby")
+
+2. Consulta: Crea 5 autores diferentes: Jane Austen, Emily Dickinson, Fyodor Dostoevksy, 
+William Shakespeare, Lau Tzu
+jane_austen = Authors.objects.create(first_name="Jane", last_name="Austen")
+emily_dickinson = Authors.objects.create(first_name="Emily", last_name="Dickinson")
+fyodor_dostoevksy = Authors.objects.create(first_name="Fyodor", last_name="Dostoevksy")
+william_shakespeare = Authors.objects.create(first_name="William", last_name="Shakespeare")
+lau_tzu = Authors.objects.create(first_name="Lau", last_name="Tzu")
+
+3.Agregue un nuevo campo de texto en la tabla de autores llamado 'notas'.
+notas= models.TextField()
+
+4.Cree y ejecute los archivos de migración para actualizar la tabla en su base de datos.
+$ python manage.py makemigrations
+It is impossible to add a non-nullable field 'notas' to authors without specifying a default. This is because the database needs something to populate existing rows.
+Please select a fix:
+ 1) Provide a one-off default now (will be set on all existing rows with a null value for this column)
+ 2) Quit and manually define a default value in models.py.
+Select an option: 1
+Please enter the default value as valid Python.
+The datetime and django.utils.timezone modules are available, so it is possible to provide e.g. timezone.now as a value.
+Type 'exit' to exit this prompt
+>>> "Notas del Autor"
+Migrations for 'books_authors_app':
+  books_authors_app\migrations\0002_authors_notas.py
+    - Add field notas to authors
+
+$ python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, books_authors_app, contenttypes, sessions
+Running migrations:
+  Applying books_authors_app.0002_authors_notas... OK
+
+5.Consulta: cambie el nombre del libro de C Sharp a C #
+act = Book.objects.get(title="C Sharp")
+act.title = "C #"
+act.save()
+
+6.Consulta: cambie el nombre del cuarto autor a Bill
+act_aut = Authors.objects.get(id=4)
+act_aut.first_name = "Bill"
+act_aut.save()
+
+7.Consulta: Asigna el primer autor a los primeros 2 libros.
+this_author = Authors.objects.get(id=1)
+firstbook = Book.objects.get(id=1)
+nextbook = Book.objects.get(id=2)
+firstbook.authors.add(this_author)
+this_author.books.add(nextbook)
+
+8.Consulta: Asigne el segundo autor a los primeros 3 libros.
+thrbook = Book.objects.get(id=3)
+sec_author = Authors.objects.get(id=2)
+sec_author.books.add(firstbook)
+sec_author.books.add(nextbook)
+sec_author.books.add(thrbook)
+
+9.Consulta: Asigna el tercer autor a los primeros 4 libros.
+frbook = Book.objects.get(id=4)
+thr_author = Authors.objects.get(id=3)
+thr_author.books.add(firstbook)
+thr_author.books.add(nextbook)
+thr_author.books.add(thrbook)
+thr_author.books.add(frbook)
+
+10.Consulta: Asigne el cuarto autor a los primeros 5 libros (o en otras palabras, todos los libros)
+fvbook = Book.objects.get(id=5)
+fr_author = Authors.objects.get(id=4)
+fr_author.books.add(firstbook)
+fr_author.books.add(nextbook)
+fr_author.books.add(thrbook)
+fr_author.books.add(frbook)
+fr_author.books.add(fvbook)
+
+11.Consulta: recupera a todos los autores del tercer libro
+autores_trc = (Book.objects.get(id=3)).authors.all()
+
+12.Consulta: eliminar al primer autor del tercer libro
+autores_trc = (Book.objects.get(id=3)).authors.all()
+print(autores_trc)
+<QuerySet [<Authors: Emily Dickinson books_authors_app.Book.None>, 
+<Authors: Fyodor Dostoevksy books_authors_app.Book.None>, 
+<Authors: Bill Shakespeare books_authors_app.Book.None>]>
+sec_author = Authors.objects.get(id=2)
+thrbook = Book.objects.get(id=3)
+sec_author.books.remove(thrbook)
+
+13.Consulta: Agregue el quinto autor como uno de los autores del segundo libro.
+fv_author = Authors.objects.get(id=5)
+fv_author.books.add(nextbook)
+
+14.Consulta: Encuentra todos los libros de los que el tercer autor es parte
+books_thr = (Authors.objects.get(id=3)).books.all()
+print(books_thr)
+<QuerySet [<Book: C # >, <Book: Java >, <Book: Python >, <Book: PHP >]>
+
+15.Consulta: Encuentra todos los autores que contribuyeron al quinto libro.
+autores_fv = (Book.objects.get(id=5)).authors.all()
+print(autores_fv)
+<QuerySet [<Authors: Bill Shakespeare books_authors_app.Book.None>]>

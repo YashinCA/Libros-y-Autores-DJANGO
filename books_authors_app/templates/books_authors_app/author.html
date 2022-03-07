@@ -1,0 +1,51 @@
+{% extends "books_authors_app/base.html" %}
+{% block titulo %}BIENVENIDA{% endblock %}
+{% block estilo %}
+
+<style>
+    h1{
+        text-align: center;
+        font-size: 50px;
+    }
+</style>
+{% endblock  %}
+{% block contenido %}
+<div class="container mt-2">
+    <h3>Authors List</h3>
+    <hr>
+</div>
+<div class='row'>
+    <div class="container col-6 mt-2">
+        <table class="table border">
+            <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for author in authors %}
+                <tr>
+                <th scope="row">{{author.id}}</th>
+                <td>{{author.first_name}} {{author.last_name}}</td>
+                <td><a href="/author/{{author.id}}">Details</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="container col-5">
+        <form action="" method="post">
+            {% csrf_token %}
+            <label for="">First Name</label>
+            <input type="text" name="nombre" class="form-control">
+            <label for="">Last Name</label>
+            <input type="text" name="apellido" class="form-control">
+            <label for="" class="form-label">Notas</label>
+                <textarea class="form-control" name='notas' rows="4"></textarea>
+                <button type="submit" class="btn btn-primary mt-3">Add</button>
+        </form>
+    </div>
+</div>
+{% endblock  %}
